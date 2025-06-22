@@ -45,6 +45,8 @@ public:
     Quantity get_remainingQuantity () const{return remainingQuantity;}
     Quantity get_fillQuantity () const{return initialQuantity - remainingQuantity;}
 
+    bool is_filled() const {return get_remainingQuantity() == 0;}
+
     void fill(Quantity quantity){
         if(quantity > get_remainingQuantity()){
             std::string error_message = fmt::format("Order ({}) cannot be filled for more than remaining quantity.\n", get_orderId());

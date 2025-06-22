@@ -1,29 +1,7 @@
-#include <iostream>
-#include <fmt/core.h>
-#include <vector>
-#include <map>
-#include <set>
-#include <limits>
-#include <string>
-#include <cmath>
-#include <ctime>
-#include <algorithm>
-#include <memory>
-
-
-enum class OrderType{
-    GoodTillCancel,
-    FillandKill,
-};
-
-enum class Side{
-    Buy,
-    Sell
-};
-
-using Price = std::int64_t;
-using Quantity = std::uint64_t;
-using OrderId = std::uint64_t;
+#include "includes.hpp"
+#include "support_types/ordertype.hpp"
+#include "support_types/sidetype.hpp"
+#include "support_types/using.hpp"
 
 // Levels: price and quantity
 
@@ -33,6 +11,7 @@ struct LevelInformation{
 };
 
 using LevelInfos = std::vector<LevelInformation>;
+
 
 class OrderBookLevelInformations{
 private:
@@ -75,8 +54,20 @@ public:
     }
 };
 
+using OrderPointer = std::shared_ptr<Order>;
+using OrderPointers = std::list<OrderPointer>;
+class OrderModify{
+private:
+    OrderId orderId_;
+    Price price_;
+    Quantity quantity_;
+    Side side_;
+public:
+    OrderModify(OrderId orderId, Price price, Quantity quantity, Side side):orderId_{orderId},  price_{price}, quantity_(quantity), side_{side}{}
 
-int main(){
-
-    return 0;
-}
+    OrderId         get_orderId () const {return orderId_;}
+    Price           get_price () const {return price_;}
+    Quantity        get_quantity() const {return quantity_;}
+    Side            get_side() const {return side_;}
+    OrderPointer    to_orderPointer(OrderType type) const {return std::make_shared<Order>(type, get_orderId(), get_side(), get_price() ,get_quantity());}
+};
